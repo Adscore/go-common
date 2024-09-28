@@ -112,6 +112,7 @@ import (
 
 	judge "github.com/Adscore/go-common/judge"
 	adscoreSignature "github.com/Adscore/go-common/signature"
+	adscoreErrors "github.com/Adscore/go-common/adscoreErrors"
 )
 
 func main() {
