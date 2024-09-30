@@ -55,11 +55,20 @@ func (s *Signature5) Verify(ipAddresses []string, userAgent string) error {
 	for _, ipAddress := range ipAddresses {
 
 		providedIpAddress := net.ParseIP(ipAddress)
+
+		if s.Payload["ipv4.ip"] == nil {
+			continue
+		}
+
 		ipV4FromSignature := s.Payload["ipv4.ip"].(string)
 
 		if net.IP.Equal(providedIpAddress, net.ParseIP(ipV4FromSignature)) {
 			matchingIp = providedIpAddress
 			break
+		}
+
+		if s.Payload["ipv6.ip"] == nil {
+			continue
 		}
 
 		ipV6FromSignature := s.Payload["ipv6.ip"].(string)

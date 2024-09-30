@@ -170,9 +170,8 @@ func (s *Signature4) verify(ipAddresses []string, userAgent string, cryptKey []b
 		var token []byte
 
 		if providedIpAddress.To4() != nil {
-			providedIpAddress.String()
 			token = s.Payload[signRole+"Token"].([]byte)
-		} else {
+		} else if providedIpAddress.To16() != nil {
 			v = 6
 			token = s.Payload[signRole+"Token6"].([]byte)
 
