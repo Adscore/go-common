@@ -5,6 +5,11 @@ import (
 )
 
 func DecodeStructFromPayload(payload []byte) (map[string]interface{}, error) {
+
+	if len(payload) < 2 {
+		return nil, adscoreErrors.NewParseError("premature end of signature")
+	}
+
 	header := payload[0:1]
 	data := payload[1:]
 

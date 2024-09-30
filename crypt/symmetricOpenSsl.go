@@ -4,6 +4,7 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 
+	adscoreErrors "github.com/Adscore/go-common/adscoreErrors"
 	utils "github.com/Adscore/go-common/utils"
 )
 
@@ -13,6 +14,10 @@ var tagLength = 16
 
 func parse(payload []byte) (method int, iv []byte, tag []byte, data []byte, err error) {
 	offset := 0
+
+	if len(payload) < 2 {
+		return -1, nil, nil, nil, adscoreErrors.NewParseError("premature end of signature")
+	}
 
 	methodUnpacked, err := utils.Unpack("vmethod", payload[0:2])
 
@@ -29,11 +34,19 @@ func parse(payload []byte) (method int, iv []byte, tag []byte, data []byte, err 
 		ivLength = 12
 	}
 
+	if len(payload) < offset+ivLength {
+		return -1, nil, nil, nil, adscoreErrors.NewParseError("premature end of signature")
+	}
+
 	iv = payload[offset : offset+ivLength]
 
 	offset += ivLength
 
 	if method == OpenSSLAEADMethod {
+		if len(payload) < offset+tagLength {
+			return -1, nil, nil, nil, adscoreErrors.NewParseError("premature end of signature")
+		}
+
 		tag = payload[offset : offset+tagLength]
 		offset += tagLength
 	}

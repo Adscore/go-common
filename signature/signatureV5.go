@@ -29,6 +29,10 @@ func CreateSignatureV5FromRequest(signature string, ipAddresses []string, userAg
 		VERSION: SUPPORTED_VERSION_V5,
 	}
 
+	if len(signature) == 0 {
+		return nil, adscoreErrors.NewParseError("premature end of signature")
+	}
+
 	err := obj.Parse(signature, cryptKey, "BASE64_VARIANT_URLSAFE_NO_PADDING")
 
 	if err != nil {
@@ -115,6 +119,10 @@ func (s *Signature5) Parse(signature string, cryptKey []byte, format string) err
 
 	if version != SUPPORTED_VERSION_V5 {
 		return adscoreErrors.NewVersionError("invalid signature version")
+	}
+
+	if len(encryptedPayload) < length+HEADER_LENGTH {
+		return adscoreErrors.NewParseError("premature end of signature")
 	}
 
 	encryptedPayload = encryptedPayload[HEADER_LENGTH : length+HEADER_LENGTH]

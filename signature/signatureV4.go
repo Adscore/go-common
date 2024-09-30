@@ -61,6 +61,9 @@ var SIMPLE_TYPES = map[string]*SimpleType{
 }
 
 func CreateSignatureV4FromRequest(signature string, ipAddresses []string, userAgent string, cryptKey string) (*Signature4, error) {
+	if len(signature) == 0 {
+		return nil, adscoreErrors.NewParseError("premature end of signature")
+	}
 
 	parsedCryptKey, err := utils.ParseCryptKey(cryptKey)
 
@@ -277,6 +280,10 @@ func readStructureField(signature []byte, fieldType string) (interface{}, []byte
 		if length&0x8000 == 0 {
 			/* For future use */
 			length = length & 0xff
+		}
+
+		if len(signature) < fieldSize+length {
+			return nil, nil, adscoreErrors.NewParseError("premature end of signature")
 		}
 
 		var v2 = signature[fieldSize : fieldSize+length]
