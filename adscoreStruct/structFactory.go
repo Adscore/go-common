@@ -31,6 +31,13 @@ func DecodeStruct(structType string, data []byte) (map[string]interface{}, error
 		fallthrough
 	case "rfc3986":
 		return decodeRFC3986Struct(data)
+
+	case "M":
+		fallthrough
+	case "Msgpack":
+		fallthrough
+	case "msgpack":
+		return decodeMsgpack(data)
 	}
 
 	return nil, adscoreErrors.NewParseError("unsupported struct type")

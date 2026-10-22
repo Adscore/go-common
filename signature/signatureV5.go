@@ -56,26 +56,22 @@ func (s *Signature5) Verify(ipAddresses []string, userAgent string) error {
 
 		providedIpAddress := net.ParseIP(ipAddress)
 
-		if s.Payload["ipv4.ip"] == nil {
+		if providedIpAddress == nil {
 			continue
 		}
 
-		ipV4FromSignature := s.Payload["ipv4.ip"].(string)
-
-		if net.IP.Equal(providedIpAddress, net.ParseIP(ipV4FromSignature)) {
-			matchingIp = providedIpAddress
-			break
+		if ipV4FromSignature, ok := s.Payload["ipv4.ip"].(string); ok {
+			if net.IP.Equal(providedIpAddress, net.ParseIP(ipV4FromSignature)) {
+				matchingIp = providedIpAddress
+				break
+			}
 		}
 
-		if s.Payload["ipv6.ip"] == nil {
-			continue
-		}
-
-		ipV6FromSignature := s.Payload["ipv6.ip"].(string)
-
-		if net.IP.Equal(providedIpAddress, net.ParseIP(ipV6FromSignature)) {
-			matchingIp = providedIpAddress
-			break
+		if ipV6FromSignature, ok := s.Payload["ipv6.ip"].(string); ok {
+			if net.IP.Equal(providedIpAddress, net.ParseIP(ipV6FromSignature)) {
+				matchingIp = providedIpAddress
+				break
+			}
 		}
 	}
 
@@ -83,9 +79,9 @@ func (s *Signature5) Verify(ipAddresses []string, userAgent string) error {
 		return adscoreErrors.NewVerifyError("signature IP mismatch")
 	}
 
-	signatureUserAgent := s.Payload["b.ua"].(string)
+	signatureUserAgent, ok := s.Payload["b.ua"].(string)
 
-	if signatureUserAgent == "" {
+	if !ok || signatureUserAgent == "" {
 		return adscoreErrors.NewVerifyError("signature contains no user agent")
 	}
 
@@ -93,17 +89,39 @@ func (s *Signature5) Verify(ipAddresses []string, userAgent string) error {
 		return adscoreErrors.NewVerifyError("signature user agent mismatch")
 	}
 
-	switch s.Payload["result"].(type) {
+	switch v := s.Payload["result"].(type) {
 	case string:
-		result, err := strconv.ParseInt(s.Payload["result"].(string), 10, 8)
+		result, err := strconv.ParseInt(v, 10, 8)
 		s.Result = int(result)
 		if err != nil {
 			return err
 		}
 	case float64:
-		s.Result = int(s.Payload["result"].(float64))
+		s.Result = int(v)
+	case float32:
+		s.Result = int(v)
+	case int:
+		s.Result = v
+	case int8:
+		s.Result = int(v)
+	case int16:
+		s.Result = int(v)
+	case int32:
+		s.Result = int(v)
+	case int64:
+		s.Result = int(v)
+	case uint:
+		s.Result = int(v)
+	case uint8:
+		s.Result = int(v)
+	case uint16:
+		s.Result = int(v)
+	case uint32:
+		s.Result = int(v)
+	case uint64:
+		s.Result = int(v)
 	default:
-		return errors.New("invalid result type, expected string or Float64")
+		return errors.New("invalid result type, expected integer, float or string")
 	}
 
 	return nil
@@ -173,7 +191,7 @@ func GetZoneId(signature string, format string) (int64, error) {
 }
 
 func decryptPayload(encryptedPayload []byte, cryptKey []byte) (map[string]interface{}, error) {
-	decryptedPayload, err := crypt.DecryptSymmetricOpenSsl(encryptedPayload, cryptKey)
+	decryptedPayload, err := crypt.DecryptSymmetric(encryptedPayload, cryptKey)
 
 	if err != nil {
 		return nil, err

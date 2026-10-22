@@ -77,9 +77,14 @@ func cbcDecrypt(data []byte, encryptionKey []byte, iv []byte) ([]byte, error) {
 		return nil, err
 	}
 
+	if len(data) == 0 || len(data)%aes.BlockSize != 0 {
+		return nil, adscoreErrors.NewParseError("invalid ciphertext length")
+	}
+
+	result := make([]byte, len(data))
 	mode := cipher.NewCBCDecrypter(block, iv)
-	mode.CryptBlocks(data, data)
-	return data, nil
+	mode.CryptBlocks(result, data)
+	return result, nil
 }
 
 func gcmDecrypt(data []byte, encryptionKey []byte, iv []byte, tag []byte) ([]byte, error) {

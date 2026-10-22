@@ -14,6 +14,7 @@ integration with the service.
 2. `v5_0201H - OpenSSL GCM, HTTP query`
 3. `v5_0200J - OpenSSL CBC, JSON`
 4. `v5_0201J - OpenSSL GCM, JSON`
+5. `v5_0101M - sodium secretbox, msgpack`
 
 ### Not supported Signature v5 algorithms
 
@@ -23,11 +24,10 @@ integration with the service.
 5. `v5_0101H - sodium secretbox, HTTP query`
 6. `v5_0101S - sodium secretbox, PHP serialize`
 7. `v5_0101J - sodium secretbox, JSON`
-8. `v5_0101M - sodium secretbox, msgpack`
-9. `v5_0200M - OpenSSL CBC, msgpack`
-10. `v5_0201M - OpenSSL GCM, msgpack`
-11. `v5_0200S - OpenSSL CBC, PHP serialize`
-12. `v5_0201S - OpenSSL GCM, PHP serialize`
+8. `v5_0200M - OpenSSL CBC, msgpack`
+9. `v5_0201M - OpenSSL GCM, msgpack`
+10. `v5_0200S - OpenSSL CBC, PHP serialize`
+11. `v5_0201S - OpenSSL GCM, PHP serialize`
 
 ## Install
 

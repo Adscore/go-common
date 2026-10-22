@@ -192,7 +192,7 @@ func (s *Signature4) verify(ipAddresses []string, userAgent string, cryptKey []b
 					s.VerificationData = SignaturePayload{}
 					s.VerificationData["verdict"] = meta.Verdict
 					s.VerificationData["result"] = result
-					s.VerificationData["ipv"+string(v)+"ip"] = ipAddress
+					s.VerificationData[fmt.Sprintf("ipv%dip", v)] = ipAddress
 					s.VerificationData[""] = verifyEmbeddedIpv6(s.Payload, result, cryptKey, userAgent, signRole)
 					s.Result = result
 
@@ -204,7 +204,7 @@ func (s *Signature4) verify(ipAddresses []string, userAgent string, cryptKey []b
 					s.VerificationData = SignaturePayload{}
 					s.VerificationData["verdict"] = meta.Verdict
 					s.VerificationData["result"] = result
-					s.VerificationData["ipv"+string(v)+"ip"] = ipAddress
+					s.VerificationData[fmt.Sprintf("ipv%dip", v)] = ipAddress
 					s.VerificationData[""] = verifyEmbeddedIpv6(s.Payload, result, cryptKey, userAgent, signRole)
 					s.Result = result
 
