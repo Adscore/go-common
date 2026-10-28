@@ -10,24 +10,30 @@ integration with the service.
 
 ### Supported Signature v5 algorithms
 
-1. `v5_0200H - OpenSSL CBC, HTTP query`
-2. `v5_0201H - OpenSSL GCM, HTTP query`
-3. `v5_0200J - OpenSSL CBC, JSON`
-4. `v5_0201J - OpenSSL GCM, JSON`
-5. `v5_0101M - sodium secretbox, msgpack`
+1. `v5_0101M - sodium secretbox, msgpack`
+
+### Deprecated Signature algorithms
+
+These algorithms are deprecated, but remain supported for backward compatibility:
+
+1. `Signature V4` (Hashing, Signing)
+2. `v5_0200H - OpenSSL CBC, HTTP query`
+3. `v5_0201H - OpenSSL GCM, HTTP query`
+4. `v5_0200J - OpenSSL CBC, JSON`
+5. `v5_0201J - OpenSSL GCM, JSON`
 
 ### Not supported Signature v5 algorithms
 
 1. `v5_0101I - sodium secretbox, igbinary`
 2. `v5_0200I - OpenSSL CBC, igbinary`
 3. `v5_0201I - OpenSSL GCM, igbinary`
-5. `v5_0101H - sodium secretbox, HTTP query`
-6. `v5_0101S - sodium secretbox, PHP serialize`
-7. `v5_0101J - sodium secretbox, JSON`
-8. `v5_0200M - OpenSSL CBC, msgpack`
-9. `v5_0201M - OpenSSL GCM, msgpack`
-10. `v5_0200S - OpenSSL CBC, PHP serialize`
-11. `v5_0201S - OpenSSL GCM, PHP serialize`
+4. `v5_0101H - sodium secretbox, HTTP query`
+5. `v5_0101S - sodium secretbox, PHP serialize`
+6. `v5_0101J - sodium secretbox, JSON`
+7. `v5_0200M - OpenSSL CBC, msgpack`
+8. `v5_0201M - OpenSSL GCM, msgpack`
+9. `v5_0200S - OpenSSL CBC, PHP serialize`
+10. `v5_0201S - OpenSSL GCM, PHP serialize`
 
 ## Install
 
@@ -35,7 +41,9 @@ Requires GO >= v1.22.5
 
 ## Usage
 
-### V4 signature decryption
+### V4 signature decryption (deprecated)
+
+Note: V4 signatures are deprecated
 
 When zone's "Response signature algorithm" is set to "Hashing" or "Signing", it means that V4 signatures are in use.
 They provide basic means to check incoming traffic for being organic and valuable, but do not carry any additional
